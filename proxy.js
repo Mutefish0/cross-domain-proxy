@@ -2,15 +2,12 @@ var http = require('http')
 
 var server = http.createServer((req,resp)=>{
     
-    console.log(`url:${req.url}`)
-
     var origin,host,path,options,headers =  Object.assign({},req.headers)
     
     //host后没有带路径
     var matchNoPath = req.url.match(/(https?:\/\/([^\/]*?))$/)
     var matchPath = req.url.match(/(https?:\/\/(.*?))(\/.*$)/)
 
-    console.log(`matchPath:${matchPath},matchNoPath:${matchNoPath}`)
 
     if(matchNoPath){
         origin = matchNoPath[1]
@@ -48,7 +45,7 @@ var server = http.createServer((req,resp)=>{
                                                 
     var _req = http.request(options,_resp=>{
     
-        resp.writeHead(_resp.statusCode,_resp.headers)
+        resp.writeHead(_resp.statusCode,Object.assign({},_resp.headers,{"Access-Control-Allow-Origin":"*"}))
         _resp.on('data',chunk=>{
             resp.write(chunk)
         })
